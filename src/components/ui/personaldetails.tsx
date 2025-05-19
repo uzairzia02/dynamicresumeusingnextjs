@@ -23,7 +23,9 @@ export default function PersonalDetails() {
     }
 
     function handleNext() {
-        localStorage.setItem("personal", JSON.stringify(form));
+        if (typeof window !== "undefined") {
+            localStorage.setItem("personal", JSON.stringify(form));
+        }
     }
 
     return (

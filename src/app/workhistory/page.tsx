@@ -1,6 +1,7 @@
 "use client"
 import { useState } from "react";
 import Header from "@/components/ui/header";
+import Link from "next/link";
 
 export default function WorkHistory() {
   const [experiences, setExperiences] = useState([
@@ -36,9 +37,11 @@ export default function WorkHistory() {
   }
 
   function handleNext() {
-    localStorage.setItem("work", JSON.stringify(experiences[0]));
-    // For multiple experiences, use: localStorage.setItem("workExperiences", JSON.stringify(experiences));
-  }
+        if (typeof window !== "undefined") {
+            localStorage.setItem("work", JSON.stringify(experiences[0]));
+            // For multiple experiences, use: localStorage.setItem("workExperiences", JSON.stringify(experiences));
+        }
+    }
 
   return (
     <>
@@ -134,19 +137,19 @@ export default function WorkHistory() {
 
         {/* Buttons */}
         <div className="mt-8 md:mt-10 flex flex-col sm:flex-row justify-end gap-4 sm:gap-6 lg:gap-12 pb-5">
-          <a href="/" className="w-full sm:w-auto">
+          <Link href="/" className="w-full sm:w-auto">
             <button className="w-full border-4 border-blue-600 hover:text-white text-blue-600 hover:bg-blue-600 duration-200 px-6 md:px-8 lg:px-10 py-2 md:py-3 font-bold rounded-full">
               Back
             </button>
-          </a>
+          </Link>
           <button type="button" onClick={addExperience} className="w-full sm:w-auto border-4 border-blue-600 hover:text-white text-blue-600 hover:bg-blue-600 duration-200 px-6 md:px-8 lg:px-10 py-2 md:py-3 font-bold rounded-full">
             Add More Experience
           </button>
-          <a href="/education" className="w-full sm:w-auto">
+          <Link href="/education" className="w-full sm:w-auto">
             <button type="button" onClick={handleNext} className="w-full border-4 border-blue-600 hover:text-white text-blue-600 hover:bg-blue-600 duration-200 px-6 md:px-8 lg:px-10 py-2 md:py-3 font-bold rounded-full">
               Next: Education
             </button>
-          </a>
+          </Link>
         </div>
       </div>
     </>

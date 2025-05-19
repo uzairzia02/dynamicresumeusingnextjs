@@ -1,6 +1,7 @@
 'use client'
 import { useState } from "react";
 import Header from "@/components/ui/header";
+import Link from "next/link";
 
 export default function Education() {
     const [educations, setEducations] = useState([
@@ -34,7 +35,9 @@ export default function Education() {
     }
 
     function handleNext() {
-        localStorage.setItem("educations", JSON.stringify(educations));
+        if (typeof window !== "undefined") {
+            localStorage.setItem("educations", JSON.stringify(educations));
+        }
     }
 
     return (
@@ -116,19 +119,19 @@ export default function Education() {
                 ))}
                 {/* Buttons */}
                 <div className="mt-8 md:mt-10 flex flex-col sm:flex-row justify-end gap-4 sm:gap-6 lg:gap-12 pb-5">
-                    <a href="/workhistory" className="w-full sm:w-auto">
+                    <Link href="/workhistory" className="w-full sm:w-auto">
                         <button className="w-full border-4 border-blue-600 hover:text-white text-blue-600 hover:bg-blue-600 duration-200 px-6 md:px-8 lg:px-10 py-2 md:py-3 font-bold rounded-full">
                             Back
                         </button>
-                    </a>
+                    </Link>
                     <button type="button" onClick={addEducation} className="w-full sm:w-auto border-4 border-blue-600 hover:text-white text-blue-600 hover:bg-blue-600 duration-200 px-6 md:px-8 lg:px-10 py-2 md:py-3 font-bold rounded-full">
                         Add More Education
                     </button>
-                    <a href="/skills" className="w-full sm:w-auto">
+                    <Link href="/skills" className="w-full sm:w-auto">
                         <button type="button" onClick={handleNext} className="w-full border-4 border-blue-600 hover:text-white text-blue-600 hover:bg-blue-600 duration-200 px-6 md:px-8 lg:px-10 py-2 md:py-3 font-bold rounded-full">
                             Next: Skills
                         </button>
-                    </a>
+                    </Link>
                 </div>
             </div>
         </>

@@ -45,31 +45,33 @@ export default function Summary() {
 
   // Load data from localStorage on mount
   useEffect(() => {
-    const personalData = localStorage.getItem("personal");
-    const workData = localStorage.getItem("workExperiences");
-    const workSingle = localStorage.getItem("work");
-    const educationsData = localStorage.getItem("educations");
-    const skillsData = localStorage.getItem("skills");
-    const summaryData = localStorage.getItem("summary");
-    if (personalData) {
-      const parsed = JSON.parse(personalData);
-      // If image is a File object, convert to data URL for display
-      if (parsed.image && typeof parsed.image === 'object' && parsed.image instanceof File) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          setPersonal({ ...parsed, image: e.target?.result });
-        };
-        reader.readAsDataURL(parsed.image);
-      } else {
-        setPersonal(parsed);
+    if (typeof window !== "undefined") {
+      const personalData = localStorage.getItem("personal");
+      const workData = localStorage.getItem("workExperiences");
+      const workSingle = localStorage.getItem("work");
+      const educationsData = localStorage.getItem("educations");
+      const skillsData = localStorage.getItem("skills");
+      const summaryData = localStorage.getItem("summary");
+      if (personalData) {
+        const parsed = JSON.parse(personalData);
+        // If image is a File object, convert to data URL for display
+        if (parsed.image && typeof parsed.image === 'object' && typeof File !== 'undefined' && parsed.image instanceof File) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            setPersonal({ ...parsed, image: e.target?.result });
+          };
+          reader.readAsDataURL(parsed.image);
+        } else {
+          setPersonal(parsed);
+        }
       }
+      // Always prefer workExperiences array if present, otherwise fallback to work
+      if (workData) setWorkExperiences(JSON.parse(workData));
+      else if (workSingle) setWorkExperiences([JSON.parse(workSingle)]);
+      if (educationsData) setEducations(JSON.parse(educationsData));
+      if (skillsData) setSkills(skillsData);
+      if (summaryData) setSummary(summaryData);
     }
-    // Always prefer workExperiences array if present, otherwise fallback to work
-    if (workData) setWorkExperiences(JSON.parse(workData));
-    else if (workSingle) setWorkExperiences([JSON.parse(workSingle)]);
-    if (educationsData) setEducations(JSON.parse(educationsData));
-    if (skillsData) setSkills(skillsData);
-    if (summaryData) setSummary(summaryData);
   }, []);
 
   // Handlers for editing and saving
@@ -83,27 +85,29 @@ export default function Summary() {
   };
 
   const handleSave = (section: string) => {
-    if (section === "personal") {
-      setPersonal({ ...personalEdit });
-      localStorage.setItem("personal", JSON.stringify(personalEdit));
+    if (typeof window !== "undefined") {
+      if (section === "personal") {
+        setPersonal({ ...personalEdit });
+        localStorage.setItem("personal", JSON.stringify(personalEdit));
+      }
+      if (section === "work") {
+        setWorkExperiences([...workEdit]);
+        localStorage.setItem("workExperiences", JSON.stringify(workEdit));
+      }
+      if (section === "education") {
+        setEducations([...educationEdit]);
+        localStorage.setItem("educations", JSON.stringify(educationEdit));
+      }
+      if (section === "skills") {
+        setSkills(skillsEdit);
+        localStorage.setItem("skills", skillsEdit);
+      }
+      if (section === "summary") {
+        setSummary(summaryEdit);
+        localStorage.setItem("summary", summaryEdit);
+      }
+      setEditSection("");
     }
-    if (section === "work") {
-      setWorkExperiences([...workEdit]);
-      localStorage.setItem("workExperiences", JSON.stringify(workEdit));
-    }
-    if (section === "education") {
-      setEducations([...educationEdit]);
-      localStorage.setItem("educations", JSON.stringify(educationEdit));
-    }
-    if (section === "skills") {
-      setSkills(skillsEdit);
-      localStorage.setItem("skills", skillsEdit);
-    }
-    if (section === "summary") {
-      setSummary(summaryEdit);
-      localStorage.setItem("summary", summaryEdit);
-    }
-    setEditSection("");
   };
 
   // Handlers for input changes

@@ -1,6 +1,7 @@
 'use client'
 import { useState } from "react";
 import Header from "@/components/ui/header";
+import Link from "next/link";
 
 export default function Skills() {
     const [skills, setSkills] = useState("");
@@ -13,8 +14,10 @@ export default function Skills() {
         setSummary(e.target.value);
     }
     function handleNext() {
-        localStorage.setItem("skills", skills);
-        localStorage.setItem("summary", summary);
+        if (typeof window !== "undefined") {
+            localStorage.setItem("skills", skills);
+            localStorage.setItem("summary", summary);
+        }
     }
 
     return (
@@ -54,16 +57,16 @@ export default function Skills() {
                 </div>
                 {/* Buttons */}
                 <div className="mt-8 md:mt-10 flex flex-col sm:flex-row justify-end gap-4 sm:gap-6 lg:gap-12 pb-5">
-                    <a href="/education" className="w-full sm:w-auto">
+                    <Link href="/education" className="w-full sm:w-auto">
                         <button className="w-full border-4 border-blue-600 hover:text-white text-blue-600 hover:bg-blue-600 duration-200 px-6 md:px-8 lg:px-10 py-2 md:py-3 font-bold rounded-full">
                             Back
                         </button>
-                    </a>
-                    <a href="/summary" className="w-full sm:w-auto">
+                    </Link>
+                    <Link href="/summary" className="w-full sm:w-auto">
                         <button type="button" onClick={handleNext} className="w-full border-4 border-blue-600 hover:text-white text-blue-600 hover:bg-blue-600 duration-200 px-6 md:px-8 lg:px-10 py-2 md:py-3 font-bold rounded-full">
                             Next: Preview
                         </button>
-                    </a>
+                    </Link>
                 </div>
             </div>
         </>
