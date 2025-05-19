@@ -51,7 +51,20 @@ export default function Summary() {
     const educationsData = localStorage.getItem("educations");
     const skillsData = localStorage.getItem("skills");
     const summaryData = localStorage.getItem("summary");
-    if (personalData) setPersonal(JSON.parse(personalData));
+    if (personalData) {
+      const parsed = JSON.parse(personalData);
+      // If image is a File object, convert to data URL for display
+      if (parsed.image && typeof parsed.image === 'object' && parsed.image instanceof File) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          setPersonal({ ...parsed, image: e.target?.result });
+        };
+        reader.readAsDataURL(parsed.image);
+      } else {
+        setPersonal(parsed);
+      }
+    }
+    // Always prefer workExperiences array if present, otherwise fallback to work
     if (workData) setWorkExperiences(JSON.parse(workData));
     else if (workSingle) setWorkExperiences([JSON.parse(workSingle)]);
     if (educationsData) setEducations(JSON.parse(educationsData));
@@ -127,17 +140,11 @@ export default function Summary() {
               <button className="text-green-600 underline" onClick={() => handleSave("personal")}>Save</button>
             )}
           </div>
-          {editSection === "personal" ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-gray-700 text-lg">
-              <div><b>Name:</b> <input name="firstName" value={personalEdit.firstName} onChange={handlePersonalChange} className="border rounded px-2" placeholder="First Name" /> <input name="lastName" value={personalEdit.lastName} onChange={handlePersonalChange} className="border rounded px-2" placeholder="Last Name" /></div>
-              <div><b>City:</b> <input name="city" value={personalEdit.city} onChange={handlePersonalChange} className="border rounded px-2" placeholder="City" /></div>
-              <div><b>Postal Code:</b> <input name="postalCode" value={personalEdit.postalCode} onChange={handlePersonalChange} className="border rounded px-2" placeholder="Postal Code" /></div>
-              <div><b>Country:</b> <input name="country" value={personalEdit.country} onChange={handlePersonalChange} className="border rounded px-2" placeholder="Country" /></div>
-              <div><b>Phone:</b> <input name="phone" value={personalEdit.phone} onChange={handlePersonalChange} className="border rounded px-2" placeholder="Phone" /></div>
-              <div><b>Email:</b> <input name="email" value={personalEdit.email} onChange={handlePersonalChange} className="border rounded px-2" placeholder="Email" /></div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-gray-700 text-lg">
+          <div className="flex flex-col md:flex-row gap-6 items-center">
+            {personal.image && typeof personal.image === 'string' && (
+              <img src={personal.image} alt="Profile" className="w-32 h-32 object-cover rounded-full border-4 border-blue-200 shadow-md mb-4 md:mb-0" />
+            )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-gray-700 text-lg w-full">
               <div><b>Name:</b> {personal.firstName} {personal.lastName}</div>
               <div><b>City:</b> {personal.city}</div>
               <div><b>Postal Code:</b> {personal.postalCode}</div>
@@ -145,7 +152,7 @@ export default function Summary() {
               <div><b>Phone:</b> {personal.phone}</div>
               <div><b>Email:</b> {personal.email}</div>
             </div>
-          )}
+          </div>
         </section>
 
         {/* Work History */}
@@ -268,9 +275,23 @@ export default function Summary() {
           {editSection === "summary" ? (
             <textarea value={summaryEdit} onChange={e => setSummaryEdit(e.target.value)} className="border rounded px-2 w-full" rows={3} />
           ) : (
-            <div className="text-gray-700 text-lg">{summary}</div>
+            <div className="text-gray-700">{summary}</div>
           )}
         </section>
+
+        {/* Generate Resume Button */}
+        <div className="flex justify-end mt-10">
+          <button
+            className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white font-bold px-10 py-4 rounded-full text-xl shadow-xl transition-all duration-200"
+            onClick={() => window.open(window.location.href + '?print=1', '_blank')}
+          >
+            Generate Resume
+          </button>
+        </div>
+        {/* Auto-print if print=1 in query */}
+        {typeof window !== 'undefined' && window.location.search.includes('print=1') && (
+          <script dangerouslySetInnerHTML={{ __html: 'window.onload = function() { window.print(); }' }} />
+        )}
       </div>
     </>
   );
