@@ -1,7 +1,7 @@
-"use client"
-import { useEffect, useState } from "react";
-import Link from "next/link";
+'use client'
+import { useState, useEffect } from "react";
 import Header from "@/components/ui/header";
+import Image from "next/image";
 
 // Types for work and education
 interface WorkExperience {
@@ -107,9 +107,6 @@ export default function Summary() {
   };
 
   // Handlers for input changes
-  const handlePersonalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPersonalEdit({ ...personalEdit, [e.target.name]: e.target.value });
-  };
   const handleWorkChange = (idx: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const updated = workEdit.map((exp, i) =>
       i === idx ? { ...exp, [e.target.name]: e.target.value } : exp
@@ -142,7 +139,7 @@ export default function Summary() {
           </div>
           <div className="flex flex-col md:flex-row gap-6 items-center">
             {personal.image && typeof personal.image === 'string' && (
-              <img src={personal.image} alt="Profile" className="w-32 h-32 object-cover rounded-full border-4 border-blue-200 shadow-md mb-4 md:mb-0" />
+              <Image src={personal.image} alt="Profile" className="w-32 h-32 object-cover rounded-full border-4 border-blue-200 shadow-md mb-4 md:mb-0" />
             )}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-gray-700 text-lg w-full">
               <div><b>Name:</b> {personal.firstName} {personal.lastName}</div>
