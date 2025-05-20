@@ -144,9 +144,9 @@ export default function PersonalDetails() {
             </div>
             {/* Buttons */}
             <div className="mt-10 flex flex-col sm:flex-row justify-end gap-4 sm:gap-12">
-                <button className="w-full sm:w-auto border-4 border-blue-600 hover:text-white text-blue-600 hover:bg-blue-600 duration-200 px-10 py-3 font-bold rounded-full">
+                {/* <button className="w-full sm:w-auto border-4 border-blue-600 hover:text-white text-blue-600 hover:bg-blue-600 duration-200 px-10 py-3 font-bold rounded-full">
                     Preview
-                </button>
+                </button> */}
                 <Link href="/workhistory">
                     <button type="button" onClick={handleNext} className="w-full sm:w-auto border-4 border-blue-600 hover:text-white text-blue-600 hover:bg-blue-600 duration-200 px-10 py-3 font-bold rounded-full">
                         Next: Work History
